@@ -1,7 +1,7 @@
 # SupaCMS
 
 Exported from: https://shy-pluto-778062.framer.app/detail
-Exported at: 00:57:25 11/6/2026
+Exported at: 01:36:17 11/6/2026
 Total files: 24
 
 Exported by [NoCodeExport](https://nocodexports.vercel.app)
