@@ -1,14 +1,8 @@
 {
-    "cleanUrls": true,
-    "trailingSlash": false,
-    "rewrites": [
-        {
-            "source": "/:slug",
-            "destination": "/detail/index.html"
-        },
-        {
-            "source": "/case-studies/:slug",
-            "destination": "/case-studies/index.html"
-        }
-    ]
+  "rewrites": [
+    {
+      "source": "/:slug",
+      "destination": "/detail/index.html"
+    }
+  ]
 }
