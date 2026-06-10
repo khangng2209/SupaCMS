@@ -3,8 +3,8 @@
     "trailingSlash": false,
     "rewrites": [
         {
-            "source": "/work/:slug",
-            "destination": "/work/index.html"
+            "source": ":slug",
+            "destination": "/detail/index.html"
         },
         {
             "source": "/case-studies/:slug",
