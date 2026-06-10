@@ -1,17 +1,14 @@
 {
-  "cleanUrls": true,
-  "trailingSlash": false,
-  "routes": [
-    {
-      "handle": "filesystem"
-    },
-    {
-      "src": "/case-studies/((?!_template(?:/|$)|.*\\.(?:css|js|mjs|map|png|jpe?g|gif|webp|avif|svg|ico|json|txt|xml|woff2?|ttf|otf)$)[^/]+)$",
-      "dest": "/case-studies/_template/index.html"
-    },
-    {
-      "src": "/((?!api(?:/|$)|_next(?:/|$)|assets(?:/|$)|cdn-cgi(?:/|$)|detail(?:/|$)|page(?:/|$)|work(?:/|$)|case-studies(?:/|$)|about(?:/|$)|favicon\\.ico$|robots\\.txt$|sitemap\\.xml$|.*\\.(?:css|js|mjs|map|png|jpe?g|gif|webp|avif|svg|ico|json|txt|xml|woff2?|ttf|otf)$)[^/]+)$",
-      "dest": "/detail/index.html"
-    }
-  ]
+    "cleanUrls": true,
+    "trailingSlash": false,
+    "rewrites": [
+        {
+            "source": "/work/:slug",
+            "destination": "/work/index.html"
+        },
+        {
+            "source": "/case-studies/:slug",
+            "destination": "/case-studies/index.html"
+        }
+    ]
 }
