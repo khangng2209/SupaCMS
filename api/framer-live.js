@@ -37,7 +37,7 @@ function pickLivePath(req) {
   };
 }
 
-module.exports = async function handler(req, res) {
+export default async function handler(req, res) {
   try {
     const livePath = pickLivePath(req);
     const upstream = new URL(livePath.pathname + livePath.search, sourceOrigin);
@@ -64,6 +64,4 @@ module.exports = async function handler(req, res) {
     res.setHeader("content-type", "text/plain; charset=utf-8");
     res.end("Framer live request failed: " + (error instanceof Error ? error.message : String(error)));
   }
-};
-
-module.exports.default = module.exports;
+}
