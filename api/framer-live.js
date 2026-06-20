@@ -54,7 +54,9 @@ export default async function handler(req, res) {
 
     res.statusCode = response.status;
     res.setHeader("content-type", contentType);
-    res.setHeader("cache-control", livePath.pathname === "/sitemap.xml" ? "s-maxage=60, stale-while-revalidate=300" : "s-maxage=30, stale-while-revalidate=300");
+    res.setHeader("cache-control", "no-store, max-age=0, must-revalidate");
+    res.setHeader("cdn-cache-control", "no-store");
+    res.setHeader("vercel-cdn-cache-control", "no-store");
     res.setHeader("x-nocodeexport-framer-live", "1");
     res.setHeader("x-nocodeexport-source", upstream.origin);
     res.end(body);
