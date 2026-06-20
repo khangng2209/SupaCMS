@@ -1,8 +1,6 @@
 {
-  "rewrites": [
-    {
-      "source": "/:slug",
-      "destination": "/detail/index.html"
-    }
-  ]
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "buildCommand": "node scripts/finalize-seo-origin.mjs",
+  "outputDirectory": "public"
 }

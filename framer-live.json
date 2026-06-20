@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "sourceOrigin": "https://shy-pluto-778062.framer.app",
+  "cmsRoutePrefixes": [
+    "/case-studies",
+    "/work"
+  ],
+  "cmsPagePaths": [
+    "/",
+    "/case-studies",
+    "/old-home",
+    "/sitemap.xml",
+    "/work"
+  ]
+}

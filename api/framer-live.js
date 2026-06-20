@@ -1,0 +1,69 @@
+const manifest = {
+  "version": 1,
+  "sourceOrigin": "https://shy-pluto-778062.framer.app",
+  "cmsRoutePrefixes": [
+    "/case-studies",
+    "/work"
+  ],
+  "cmsPagePaths": [
+    "/",
+    "/case-studies",
+    "/old-home",
+    "/sitemap.xml",
+    "/work"
+  ]
+};
+
+const sourceOrigin = new URL(manifest.sourceOrigin).origin;
+
+function firstHeader(value) {
+  return Array.isArray(value) ? value[0] : value;
+}
+
+function requestOrigin(req) {
+  const host = firstHeader(req.headers["x-forwarded-host"]) || req.headers.host || "";
+  const proto = firstHeader(req.headers["x-forwarded-proto"]) || "https";
+  return host ? proto + "://" + host : sourceOrigin;
+}
+
+function pickLivePath(req) {
+  const base = "https://" + (req.headers.host || "local.invalid");
+  const url = new URL(req.url || "/", base);
+  const path = url.searchParams.get("path") || url.pathname;
+  url.searchParams.delete("path");
+  return {
+    pathname: path.startsWith("/") ? path : "/" + path,
+    search: url.searchParams.toString() ? "?" + url.searchParams.toString() : "",
+  };
+}
+
+module.exports = async function handler(req, res) {
+  try {
+    const livePath = pickLivePath(req);
+    const upstream = new URL(livePath.pathname + livePath.search, sourceOrigin);
+    const response = await fetch(upstream, {
+      headers: {
+        accept: req.headers.accept || "text/html,application/xhtml+xml",
+        "user-agent": req.headers["user-agent"] || "NoCodeExport-Framer-Live",
+      },
+      redirect: "follow",
+    });
+
+    const contentType = response.headers.get("content-type") || "text/html; charset=utf-8";
+    let body = await response.text();
+    body = body.replaceAll(sourceOrigin, requestOrigin(req));
+
+    res.statusCode = response.status;
+    res.setHeader("content-type", contentType);
+    res.setHeader("cache-control", livePath.pathname === "/sitemap.xml" ? "s-maxage=60, stale-while-revalidate=300" : "s-maxage=30, stale-while-revalidate=300");
+    res.setHeader("x-nocodeexport-framer-live", "1");
+    res.setHeader("x-nocodeexport-source", upstream.origin);
+    res.end(body);
+  } catch (error) {
+    res.statusCode = 502;
+    res.setHeader("content-type", "text/plain; charset=utf-8");
+    res.end("Framer live request failed: " + (error instanceof Error ? error.message : String(error)));
+  }
+};
+
+module.exports.default = module.exports;
