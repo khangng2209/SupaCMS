@@ -35,6 +35,14 @@ function localPath(pathname) {
   return join(root, ...segments);
 }
 
+function stripFramerChrome(html) {
+  return html
+    .replace(/<a[^>]*href\s*=\s*["'][^"']*framer\.com[^"']*["'][^>]*>[\s\S]*?<\/a>/gi, "")
+    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, (match) => /__framer-(?:badge|toolbar|editor)|framer-badge|framer-toolbar|FramerBadge|FramerSiteControlBar|badge-container|framerbadge/i.test(match) ? "" : match)
+    .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, (match) => /framer-badge|badge-container|framerbadge/i.test(match) ? "" : match)
+    .replace(/<[^>]*(?:framer-badge|framerbadge|badge-container)[^>]*>[\s\S]*?<\/[^>]+>/gi, "");
+}
+
 async function readStatic(pathname) {
   const base = localPath(pathname);
   const candidates = pathname.endsWith("/")
@@ -59,7 +67,7 @@ async function proxyFramer(req, res, requestUrl) {
   let body = await response.text();
   const host = req.headers.host || "localhost:" + port;
   const localOrigin = "http://" + host;
-  body = body.replaceAll(sourceOrigin, localOrigin);
+  body = stripFramerChrome(body).replaceAll(sourceOrigin, localOrigin);
 
   res.writeHead(response.status, {
     "content-type": response.headers.get("content-type") || "text/html; charset=utf-8",

@@ -36,6 +36,14 @@ function pickLivePath(req) {
   };
 }
 
+function stripFramerChrome(html) {
+  return html
+    .replace(/<a[^>]*href\s*=\s*["'][^"']*framer\.com[^"']*["'][^>]*>[\s\S]*?<\/a>/gi, "")
+    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, (match) => /__framer-(?:badge|toolbar|editor)|framer-badge|framer-toolbar|FramerBadge|FramerSiteControlBar|badge-container|framerbadge/i.test(match) ? "" : match)
+    .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, (match) => /framer-badge|badge-container|framerbadge/i.test(match) ? "" : match)
+    .replace(/<[^>]*(?:framer-badge|framerbadge|badge-container)[^>]*>[\s\S]*?<\/[^>]+>/gi, "");
+}
+
 export default async function handler(req, res) {
   try {
     const livePath = pickLivePath(req);
@@ -50,7 +58,7 @@ export default async function handler(req, res) {
 
     const contentType = response.headers.get("content-type") || "text/html; charset=utf-8";
     let body = await response.text();
-    body = body.replaceAll(sourceOrigin, requestOrigin(req));
+    body = stripFramerChrome(body).replaceAll(sourceOrigin, requestOrigin(req));
 
     res.statusCode = response.status;
     res.setHeader("content-type", contentType);
