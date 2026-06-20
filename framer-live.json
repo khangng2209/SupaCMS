@@ -8,6 +8,7 @@
   "cmsPagePaths": [
     "/",
     "/case-studies",
+    "/robots.txt",
     "/sitemap.xml",
     "/work"
   ]

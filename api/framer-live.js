@@ -8,6 +8,7 @@ const manifest = {
   "cmsPagePaths": [
     "/",
     "/case-studies",
+    "/robots.txt",
     "/sitemap.xml",
     "/work"
   ]
@@ -42,6 +43,29 @@ function stripFramerChrome(html) {
   return cleaned.includes("</head>") ? cleaned.replace("</head>", guard + "</head>") : cleaned;
 }
 
+function rewriteSourceOrigin(body, targetOrigin) {
+  const escapedSource = sourceOrigin.split("/").join("\\/");
+  const escapedTarget = targetOrigin.split("/").join("\\/");
+  return body
+    .replaceAll(sourceOrigin, targetOrigin)
+    .replaceAll(escapedSource, escapedTarget);
+}
+
+function rewriteLiveBody(body, contentType, targetOrigin) {
+  const rewritten = rewriteSourceOrigin(body, targetOrigin);
+  return /text\/html/i.test(contentType) ? stripFramerChrome(rewritten) : rewritten;
+}
+
+function fallbackRobots(targetOrigin) {
+  return [
+    "User-agent: *",
+    "Allow: /",
+    "Disallow: /api/",
+    "Sitemap: " + targetOrigin + "/sitemap.xml",
+    "",
+  ].join("\n");
+}
+
 export default async function handler(req, res) {
   try {
     const livePath = pickLivePath(req);
@@ -59,10 +83,16 @@ export default async function handler(req, res) {
 
     const contentType = response.headers.get("content-type") || "text/html; charset=utf-8";
     let body = await response.text();
-    body = stripFramerChrome(body).replaceAll(sourceOrigin, requestOrigin(req));
+    const targetOrigin = requestOrigin(req);
+    const upstreamFailedRobots = livePath.pathname === "/robots.txt" && response.status >= 400;
+    if (upstreamFailedRobots) {
+      body = fallbackRobots(targetOrigin);
+    } else {
+      body = rewriteLiveBody(body, contentType, targetOrigin);
+    }
 
-    res.statusCode = response.status;
-    res.setHeader("content-type", contentType);
+    res.statusCode = upstreamFailedRobots ? 200 : response.status;
+    res.setHeader("content-type", upstreamFailedRobots ? "text/plain; charset=utf-8" : contentType);
     res.setHeader("cache-control", "no-store, max-age=0, must-revalidate");
     res.setHeader("cdn-cache-control", "no-store");
     res.setHeader("vercel-cdn-cache-control", "no-store");

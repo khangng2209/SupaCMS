@@ -14,6 +14,10 @@
       "dest": "/api/framer-live?path=/case-studies"
     },
     {
+      "src": "^/robots\\.txt$",
+      "dest": "/api/framer-live?path=/robots.txt"
+    },
+    {
       "src": "^/sitemap\\.xml$",
       "dest": "/api/framer-live?path=/sitemap.xml"
     },

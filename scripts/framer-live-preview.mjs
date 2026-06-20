@@ -41,6 +41,29 @@ function stripFramerChrome(html) {
   return cleaned.includes("</head>") ? cleaned.replace("</head>", guard + "</head>") : cleaned;
 }
 
+function rewriteSourceOrigin(body, targetOrigin) {
+  const escapedSource = sourceOrigin.split("/").join("\\/");
+  const escapedTarget = targetOrigin.split("/").join("\\/");
+  return body
+    .replaceAll(sourceOrigin, targetOrigin)
+    .replaceAll(escapedSource, escapedTarget);
+}
+
+function rewriteLiveBody(body, contentType, targetOrigin) {
+  const rewritten = rewriteSourceOrigin(body, targetOrigin);
+  return /text\/html/i.test(contentType) ? stripFramerChrome(rewritten) : rewritten;
+}
+
+function fallbackRobots(targetOrigin) {
+  return [
+    "User-agent: *",
+    "Allow: /",
+    "Disallow: /api/",
+    "Sitemap: " + targetOrigin + "/sitemap.xml",
+    "",
+  ].join("\n");
+}
+
 async function readStatic(pathname) {
   const base = localPath(pathname);
   const candidates = pathname.endsWith("/")
@@ -66,13 +89,19 @@ async function proxyFramer(req, res, requestUrl) {
     pragma: "no-cache",
   };
   const response = await fetch(upstream, { headers, redirect: "follow", cache: "no-store" });
+  const contentType = response.headers.get("content-type") || "text/html; charset=utf-8";
   let body = await response.text();
   const host = req.headers.host || "localhost:" + port;
   const localOrigin = "http://" + host;
-  body = stripFramerChrome(body).replaceAll(sourceOrigin, localOrigin);
+  const upstreamFailedRobots = requestUrl.pathname === "/robots.txt" && response.status >= 400;
+  if (upstreamFailedRobots) {
+    body = fallbackRobots(localOrigin);
+  } else {
+    body = rewriteLiveBody(body, contentType, localOrigin);
+  }
 
-  res.writeHead(response.status, {
-    "content-type": response.headers.get("content-type") || "text/html; charset=utf-8",
+  res.writeHead(upstreamFailedRobots ? 200 : response.status, {
+    "content-type": requestUrl.pathname === "/robots.txt" && response.status >= 400 ? "text/plain; charset=utf-8" : contentType,
     "cache-control": "no-store",
     "x-nocodeexport-framer-live": "1",
     "x-nocodeexport-source": upstream.origin,
