@@ -4,30 +4,33 @@
   "buildCommand": "node scripts/finalize-seo-origin.mjs",
   "outputDirectory": "public",
   "version": 2,
-  "rewrites": [
+  "routes": [
     {
-      "source": "/",
-      "destination": "/api/framer-live?path=/"
+      "src": "^/$",
+      "dest": "/api/framer-live?path=/"
     },
     {
-      "source": "/case-studies",
-      "destination": "/api/framer-live?path=/case-studies"
+      "src": "^/case-studies$",
+      "dest": "/api/framer-live?path=/case-studies"
     },
     {
-      "source": "/sitemap.xml",
-      "destination": "/api/framer-live?path=/sitemap.xml"
+      "src": "^/sitemap\\.xml$",
+      "dest": "/api/framer-live?path=/sitemap.xml"
     },
     {
-      "source": "/work",
-      "destination": "/api/framer-live?path=/work"
+      "src": "^/work$",
+      "dest": "/api/framer-live?path=/work"
     },
     {
-      "source": "/case-studies/:path*",
-      "destination": "/api/framer-live?path=/case-studies/:path*"
+      "src": "^/case-studies/(.+)$",
+      "dest": "/api/framer-live?path=/case-studies/$1"
     },
     {
-      "source": "/work/:path*",
-      "destination": "/api/framer-live?path=/work/:path*"
+      "src": "^/work/(.+)$",
+      "dest": "/api/framer-live?path=/work/$1"
+    },
+    {
+      "handle": "filesystem"
     }
   ]
 }
