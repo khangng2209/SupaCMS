@@ -8,7 +8,6 @@ const manifest = {
   "cmsPagePaths": [
     "/",
     "/case-studies",
-    "/old-home",
     "/sitemap.xml",
     "/work"
   ]

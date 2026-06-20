@@ -2,5 +2,32 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "buildCommand": "node scripts/finalize-seo-origin.mjs",
-  "outputDirectory": "public"
+  "outputDirectory": "public",
+  "version": 2,
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/api/framer-live?path=/"
+    },
+    {
+      "source": "/case-studies",
+      "destination": "/api/framer-live?path=/case-studies"
+    },
+    {
+      "source": "/sitemap.xml",
+      "destination": "/api/framer-live?path=/sitemap.xml"
+    },
+    {
+      "source": "/work",
+      "destination": "/api/framer-live?path=/work"
+    },
+    {
+      "source": "/case-studies/:path*",
+      "destination": "/api/framer-live?path=/case-studies/:path*"
+    },
+    {
+      "source": "/work/:path*",
+      "destination": "/api/framer-live?path=/work/:path*"
+    }
+  ]
 }
