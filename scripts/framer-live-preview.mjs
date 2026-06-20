@@ -36,11 +36,14 @@ function localPath(pathname) {
 }
 
 function stripFramerChrome(html) {
-  return html
+  const cleaned = html
+    .replace(/<!--[sS]*?Made in Framer[sS]*?-->/gi, "")
     .replace(/<a[^>]*href\s*=\s*["'][^"']*framer\.com[^"']*["'][^>]*>[\s\S]*?<\/a>/gi, "")
     .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, (match) => /__framer-(?:badge|toolbar|editor)|framer-badge|framer-toolbar|FramerBadge|FramerSiteControlBar|badge-container|framerbadge/i.test(match) ? "" : match)
     .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, (match) => /framer-badge|badge-container|framerbadge/i.test(match) ? "" : match)
     .replace(/<[^>]*(?:framer-badge|framerbadge|badge-container)[^>]*>[\s\S]*?<\/[^>]+>/gi, "");
+  const guard = '<style id="nce-framer-chrome-guard">[href*="framer.com"][aria-label*="Made"],[href*="framer.com"]:has(svg),[class*="framer-badge"],[id*="framer-badge"],[data-framer-badge]{display:none!important;visibility:hidden!important;pointer-events:none!important}</style><script id="nce-framer-chrome-guard-script">(()=>{const clean=()=>{document.querySelectorAll(\'[href*="framer.com"],[class*="framer-badge"],[id*="framer-badge"],[data-framer-badge]\').forEach((el)=>{if(/Made in Framer|framer-badge|framerbadge/i.test(el.textContent||el.className||el.id||el.outerHTML))el.remove()})};clean();new MutationObserver(clean).observe(document.documentElement,{childList:true,subtree:true})})();</script>';
+  return cleaned.includes("</head>") ? cleaned.replace("</head>", guard + "</head>") : cleaned;
 }
 
 async function readStatic(pathname) {
