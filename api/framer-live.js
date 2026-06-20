@@ -5,12 +5,49 @@ const manifest = {
     "/case-studies",
     "/work"
   ],
-  "cmsPagePaths": [
+  "livePagePaths": [
     "/",
+    "/404",
+    "/about",
     "/case-studies",
+    "/case-studies/acacy",
+    "/case-studies/framer-x-threejs",
+    "/case-studies/nocodeexport",
+    "/case-studies/p2p.ai",
+    "/case-studies/shadcn-ui-figma-library",
     "/robots.txt",
     "/sitemap.xml",
-    "/work"
+    "/work",
+    "/work/acacy",
+    "/work/framer-x-threejs",
+    "/work/g-finance",
+    "/work/kat-luu---feng-shui-master",
+    "/work/nocodeexport",
+    "/work/p2p.ai",
+    "/work/shadcn-ui-figma-library",
+    "/work/skyverses---ai-studio"
+  ],
+  "cmsPagePaths": [
+    "/",
+    "/404",
+    "/about",
+    "/case-studies",
+    "/case-studies/acacy",
+    "/case-studies/framer-x-threejs",
+    "/case-studies/nocodeexport",
+    "/case-studies/p2p.ai",
+    "/case-studies/shadcn-ui-figma-library",
+    "/robots.txt",
+    "/sitemap.xml",
+    "/work",
+    "/work/acacy",
+    "/work/framer-x-threejs",
+    "/work/g-finance",
+    "/work/kat-luu---feng-shui-master",
+    "/work/nocodeexport",
+    "/work/p2p.ai",
+    "/work/shadcn-ui-figma-library",
+    "/work/skyverses---ai-studio"
   ]
 };
 

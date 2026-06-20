@@ -10,8 +10,36 @@
       "dest": "/api/framer-live?path=/"
     },
     {
+      "src": "^/404$",
+      "dest": "/api/framer-live?path=/404"
+    },
+    {
+      "src": "^/about$",
+      "dest": "/api/framer-live?path=/about"
+    },
+    {
       "src": "^/case-studies$",
       "dest": "/api/framer-live?path=/case-studies"
+    },
+    {
+      "src": "^/case-studies/acacy$",
+      "dest": "/api/framer-live?path=/case-studies/acacy"
+    },
+    {
+      "src": "^/case-studies/framer-x-threejs$",
+      "dest": "/api/framer-live?path=/case-studies/framer-x-threejs"
+    },
+    {
+      "src": "^/case-studies/nocodeexport$",
+      "dest": "/api/framer-live?path=/case-studies/nocodeexport"
+    },
+    {
+      "src": "^/case-studies/p2p\\.ai$",
+      "dest": "/api/framer-live?path=/case-studies/p2p.ai"
+    },
+    {
+      "src": "^/case-studies/shadcn-ui-figma-library$",
+      "dest": "/api/framer-live?path=/case-studies/shadcn-ui-figma-library"
     },
     {
       "src": "^/robots\\.txt$",
@@ -26,12 +54,36 @@
       "dest": "/api/framer-live?path=/work"
     },
     {
-      "src": "^/case-studies/(.+)$",
-      "dest": "/api/framer-live?path=/case-studies/$1"
+      "src": "^/work/acacy$",
+      "dest": "/api/framer-live?path=/work/acacy"
     },
     {
-      "src": "^/work/(.+)$",
-      "dest": "/api/framer-live?path=/work/$1"
+      "src": "^/work/framer-x-threejs$",
+      "dest": "/api/framer-live?path=/work/framer-x-threejs"
+    },
+    {
+      "src": "^/work/g-finance$",
+      "dest": "/api/framer-live?path=/work/g-finance"
+    },
+    {
+      "src": "^/work/kat-luu---feng-shui-master$",
+      "dest": "/api/framer-live?path=/work/kat-luu---feng-shui-master"
+    },
+    {
+      "src": "^/work/nocodeexport$",
+      "dest": "/api/framer-live?path=/work/nocodeexport"
+    },
+    {
+      "src": "^/work/p2p\\.ai$",
+      "dest": "/api/framer-live?path=/work/p2p.ai"
+    },
+    {
+      "src": "^/work/shadcn-ui-figma-library$",
+      "dest": "/api/framer-live?path=/work/shadcn-ui-figma-library"
+    },
+    {
+      "src": "^/work/skyverses---ai-studio$",
+      "dest": "/api/framer-live?path=/work/skyverses---ai-studio"
     },
     {
       "handle": "filesystem"

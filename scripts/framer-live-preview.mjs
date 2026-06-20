@@ -8,7 +8,7 @@ const port = Number(process.env.PORT || 4174);
 const manifest = JSON.parse(await readFile(join(root, "framer-live.json"), "utf8"));
 const sourceOrigin = new URL(manifest.sourceOrigin).origin;
 const prefixes = manifest.cmsRoutePrefixes || [];
-const livePages = new Set(manifest.cmsPagePaths || []);
+const livePages = new Set(manifest.livePagePaths || manifest.cmsPagePaths || []);
 
 const mime = {
   ".html": "text/html; charset=utf-8",
@@ -24,9 +24,9 @@ const mime = {
   ".woff2": "font/woff2",
 };
 
-function isLiveCmsPath(pathname) {
+function isLiveRoutePath(pathname) {
   const normalized = pathname.length > 1 && pathname.endsWith("/") ? pathname.slice(0, -1) : pathname;
-  return livePages.has(normalized) || prefixes.some((prefix) => normalized.startsWith(prefix + "/"));
+  return livePages.has(normalized);
 }
 
 function localPath(pathname) {
@@ -113,7 +113,7 @@ const server = createServer(async (req, res) => {
   try {
     const host = req.headers.host || "localhost:" + port;
     const requestUrl = new URL(req.url || "/", "http://" + host);
-    if (isLiveCmsPath(requestUrl.pathname)) {
+    if (isLiveRoutePath(requestUrl.pathname)) {
       await proxyFramer(req, res, requestUrl);
       return;
     }
@@ -139,6 +139,6 @@ const server = createServer(async (req, res) => {
 
 server.listen(port, "127.0.0.1", () => {
   console.log(`NoCodeExport Framer live preview: http://127.0.0.1:${port}`);
-  console.log(`CMS detail routes: ${prefixes.join(", ") || "none"}`);
-  console.log(`CMS list pages: ${[...livePages].join(", ") || "none"}`);
+  console.log(`Detected dynamic prefixes: ${prefixes.join(", ") || "none"}`);
+  console.log(`Live exported routes: ${[...livePages].join(", ") || "none"}`);
 });
